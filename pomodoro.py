@@ -1,13 +1,28 @@
-import ctypes
 import time
+import ctypes
 import threading
 from pystray import Icon, Menu, MenuItem
 from PIL import Image
+from win10toast import ToastNotifier  # win10toast を使って Windows の通知を実現
 
 # タイマーの状態フラグ
 is_running = False
 
+# 通知を表示するためのオブジェクト
+toaster = ToastNotifier()
+# TODO: トースト通知を行う
+# def show_notification(title, message):
+#     # win10toast を使用してシステム通知を表示
+#     toaster.show_toast(
+#         title,
+#         message,
+#         duration=10,  # 通知が表示される秒数
+#         threaded=True  # 別スレッドで通知を表示する
+#     )
+
+# 通知オブジェクト作成
 def show_notification(title, message):
+    # メインスレッドで MessageBoxW を呼び出す
     ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)
 
 # ###################################
@@ -17,7 +32,7 @@ def show_notification(title, message):
 # タイマー起動メソッド
 def start_pomodoro_thread():
     # ポモドーロタイマーを別スレッドで開始
-    threading.Thread(target=start_pomodoro, daemon=True).start()
+    threading.Thread(target=start_pomodoro, daemon=False).start()
 
 def start_pomodoro():
     global is_running
@@ -53,15 +68,15 @@ def stop_pomodoro():
     global is_running
     is_running = False
     update_menu()
-    show_notification("ポモドーロタイマー", "セッションを終了します！お疲れさまでした。")
-
+    # メインスレッドで MessageBoxW を呼び出す
+    # show_notification("ポモドーロタイマー", "セッションを終了します！お疲れさまでした。")
 
 # ###################################
 # システムトレー作成                  #
 # ###################################
 
 # システムトレイ作成スレッド作成
-def start_systemtrayThead():
+def start_systemtray_thread():
     # システムトレイを別スレッドで起動
     tasktray_thread = threading.Thread(target=systemtray_create)
     tasktray_thread.daemon = False  # メインスレッド終了時に自動終了
@@ -89,13 +104,13 @@ def update_menu():
         # タイマーが動いていない場合、「開始」ボタンを有効にし、「終了」ボタンを無効にする
         menu_items.append(MenuItem("開始", start_pomodoro_thread, enabled=True))
         menu_items.append(MenuItem("終了", lambda: None, enabled=False))
+
     # 新しいメニューを適用
     Icon.menu = Menu(*menu_items)
-
 
 # メイン処理
 if __name__ == "__main__":
     # タイマースレッド起動
     start_pomodoro_thread()
     # システムトレイ作成
-    start_systemtrayThead()
+    start_systemtray_thread()

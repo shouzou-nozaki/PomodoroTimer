@@ -1,7 +1,7 @@
 import ctypes
 import time
-from pystray import icon,Menu,MenuItem
-from PIL import Image;
+# from pystray import icon,Menu,MenuItem
+# from PIL import Image;
 
 def show_notification(title, message):
     ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)
@@ -24,31 +24,31 @@ def start_pomodoro():
             print("全てのセッションが完了しました！")
             show_notification("ポモドーロタイマー", "全てのセッションが完了しました！")
 
-# タスクトレー作成
-def tasktray_create():
-    try:
-        global icon
-        item=[]
-        options_map = {'Test': lambda: tasktray_test(),'Quit': lambda: tasktray_abort()}
+# # タスクトレー作成
+# def tasktray_create():
+#     try:
+#         global icon
+#         item=[]
+#         options_map = {'Test': lambda: tasktray_test(),'Quit': lambda: tasktray_abort()}
  
-        for option,callback in options_map.items():
-            item.append( MenuItem(option,callback,default=True if option == 'Show' else False ) )
+#         for option,callback in options_map.items():
+#             item.append( MenuItem(option,callback,default=True if option == 'Show' else False ) )
             
-        menu = Menu(*item)
+#         menu = Menu(*item)
 
-        image = Image.open("app.ico")
-        icon = Icon("name",image,"My System Tray Icon", menu)
-        icon.run()
-    finally:
-        tasktray_abort()
+#         image = Image.open("app.ico")
+#         icon = Icon("name",image,"My System Tray Icon", menu)
+#         icon.run()
+#     finally:
+#         tasktray_abort()
 
-def tasktray_test():
-    print("TaskTray Test")
+# def tasktray_test():
+#     print("TaskTray Test")
     
-def tasktray_abort():
-    global icon
-    if icon != 0:
-        icon.stop()
+# def tasktray_abort():
+#     global icon
+#     if icon != 0:
+#         icon.stop()
 
 if __name__ == "__main__":
     start_pomodoro()

@@ -100,7 +100,7 @@
  [],
  False,
  False,
- 1728724831,
+ 1728726954,
  [('runw.exe',
    'C:\\Users\\soro0\\work\\program\\PomodoroTimer\\myenv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')],

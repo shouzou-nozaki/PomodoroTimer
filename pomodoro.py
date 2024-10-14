@@ -3,7 +3,7 @@ import ctypes
 import threading
 from pystray import Icon, Menu, MenuItem
 from PIL import Image
-from win10toast import ToastNotifier  # win10toast を使って Windows の通知を実現
+from win10toast import ToastNotifier
 
 # タイマーの状態フラグ
 is_running = False
@@ -11,19 +11,20 @@ is_running = False
 # 通知を表示するためのオブジェクト
 toaster = ToastNotifier()
 # TODO: トースト通知を行う
-# def show_notification(title, message):
-#     # win10toast を使用してシステム通知を表示
-#     toaster.show_toast(
-#         title,
-#         message,
-#         duration=10,  # 通知が表示される秒数
-#         threaded=True  # 別スレッドで通知を表示する
-#     )
+def show_notification(title, message):
+    # win10toast を使用してシステム通知を表示
+    toaster.show_toast(
+        title,
+        message,
+        duration=10,  # 通知が表示される秒数
+        threaded=True,  # 別スレッドで通知を表示する
+        icon_path="./tomato.ico"
+    )
 
 # 通知オブジェクト作成
-def show_notification(title, message):
-    # メインスレッドで MessageBoxW を呼び出す
-    ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)
+# def show_notification(title, message):
+#     # メインスレッドで MessageBoxW を呼び出す
+#     ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)
 
 # ###################################
 # タイマー処理                       #
@@ -68,8 +69,8 @@ def stop_pomodoro():
     global is_running
     is_running = False
     update_menu()
-    # メインスレッドで MessageBoxW を呼び出す
-    # show_notification("ポモドーロタイマー", "セッションを終了します！お疲れさまでした。")
+    # TODO:トースト時に有効にする
+    show_notification("ポモドーロタイマー", "セッションを終了します！お疲れさまでした。")
 
 # ###################################
 # システムトレー作成                  #
